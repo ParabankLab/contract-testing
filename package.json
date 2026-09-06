@@ -1,0 +1,23 @@
+{
+  "name": "contract-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ParabankLab/contract-testing.git"
+  },
+  "keywords": [],
+  "author": "the_stock_mine <info@thestockmine.com>",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ParabankLab/contract-testing/issues"
+  },
+  "homepage": "https://github.com/ParabankLab/contract-testing#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.4.1"
+  }
+}
