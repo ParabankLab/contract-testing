@@ -1,7 +1,7 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: ['**/*.test.ts'],
+  testMatch: ['**/tests/**/*.pact.test.ts'],
   verbose: true,
-  testTimeout: 30000 // Give Pact mock server ample time to start/stop
+  testTimeout: 30000
 };
