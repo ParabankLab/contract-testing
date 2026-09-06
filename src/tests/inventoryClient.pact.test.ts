@@ -1,9 +1,8 @@
 import { describe, it, expect } from '@jest/globals';
-import { PactV3, MatchersV3 } from '@pact-foundation/pact';
-import * as path from 'path';
+import { PactV3 } from '@pact-foundation/pact';
+import path from 'path';
 import { InventoryClient } from '../clients/inventoryClient';
-
-const { like, string, integer } = MatchersV3;
+import { InventoryMockFixtures } from '../models/pactExpectations';
 
 const provider = new PactV3({
   consumer: 'OrderService',
@@ -24,12 +23,7 @@ describe('InventoryClient Pact Test', () => {
       .willRespondWith({
         status: 200,
         headers: { 'Content-Type': 'application/json' },
-        body: like({
-          id: string('item-uuid-123'),
-          sku: string('SKU-100'),
-          quantity: integer(150),
-          status: string('IN_STOCK'),
-        }),
+        body: InventoryMockFixtures.getItemResponseBody(),
       });
 
     return provider.executeTest(async (mockServer) => {

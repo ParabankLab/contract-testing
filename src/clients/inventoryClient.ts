@@ -1,11 +1,5 @@
 import axios from 'axios';
-
-export interface InventoryItem {
-  id: string;
-  sku: string;
-  quantity: number;
-  status: string;
-}
+import { InventoryItem } from '../models/inventoryItem';
 
 export class InventoryClient {
   private baseUrl: string;
