@@ -17,7 +17,21 @@
   },
   "homepage": "https://github.com/ParabankLab/contract-testing#readme",
   "devDependencies": {
+    "@pact-foundation/pact": "^17.1.3",
     "@playwright/test": "^1.63.0",
-    "@types/node": "^26.4.1"
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.4.1",
+    "jest": "^30.5.1",
+    "ts-jest": "^29.4.12",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.7.0"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "playwright": "^1.63.0",
+    "playwright-core": "^1.63.0",
+    "undici-types": "^8.3.0"
   }
 }
