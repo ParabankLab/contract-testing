@@ -13,7 +13,7 @@ const provider = new PactV3({
 });
 
 describe('InventoryClient Pact Test', () => {
-  it('fetches inventory item details by SKU', () => {
+  it('fetches inventory item details by SKU', async () => {
     provider
       .given('item execution exists for SKU-100')
       .uponReceiving('a request to fetch stock levels')
@@ -28,20 +28,21 @@ describe('InventoryClient Pact Test', () => {
         body: InventoryMockFixtures.getItemResponseBody(),
       });
 
-    return provider.executeTest(async (mockServer) => {
+    // 1. Wait for executeTest to complete so Pact flushes the file to disk
+    await provider.executeTest(async (mockServer) => {
       const client = new InventoryClient(mockServer.url);
       const data = await client.getStock('SKU-100');
 
       expect(data.sku).toBe('SKU-100');
       expect(data.quantity).toBe(150);
       expect(data.status).toBe('IN_STOCK');
-
-      // NOW the test execution is complete and Pact has written the contract file!
-      const pactFilePath = path.resolve(process.cwd(), 'pacts', 'OrderService-InventoryService.json');
-      if (fs.existsSync(pactFilePath)) {
-        const pactContent = fs.readFileSync(pactFilePath, 'utf-8');
-        allure.attachment('Generated Pact Contract', pactContent, 'application/json');
-      }
     });
+
+    // 2. Attach the contract file now that executeTest has written it to disk
+    const pactFilePath = path.resolve(process.cwd(), 'pacts', 'OrderService-InventoryService.json');
+    if (fs.existsSync(pactFilePath)) {
+      const pactContent = fs.readFileSync(pactFilePath, 'utf-8');
+      allure.attachment('Generated Pact Contract', pactContent, 'application/json');
+    }
   });
 });
