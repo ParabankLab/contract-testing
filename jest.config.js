@@ -4,5 +4,15 @@ module.exports = {
   testMatch: ['**/tests/**/*.pact.test.ts'],
   setupFiles: ['./jest.setup.js'],
   verbose: true,
-  testTimeout: 30000
+  testTimeout: 30000,
+
+  reporters: [
+    'default',
+    [
+      'allure-jest',
+      {
+        resultsDir: './allure-results',
+      },
+    ],
+  ],
 };
