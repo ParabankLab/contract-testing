@@ -1,8 +1,10 @@
 import { describe, it, expect } from '@jest/globals';
 import { PactV3 } from '@pact-foundation/pact';
+import fs from 'fs';
 import path from 'path';
 import { InventoryClient } from '../clients/inventoryClient';
 import { InventoryMockFixtures } from '../models/pactExpectations';
+import { allure } from 'jest-allure2-reporter/api';
 
 const provider = new PactV3({
   consumer: 'OrderService',
@@ -25,6 +27,14 @@ describe('InventoryClient Pact Test', () => {
         headers: { 'Content-Type': 'application/json' },
         body: InventoryMockFixtures.getItemResponseBody(),
       });
+
+    afterAll(() => {
+      const pactFilePath = path.resolve(process.cwd(), 'pacts', 'OrderService-InventoryService.json');
+      if (fs.existsSync(pactFilePath)) {
+        const pactContent = fs.readFileSync(pactFilePath, 'utf-8');
+       allure.attachment('Generated Pact Contract', pactContent, 'application/json');
+      }
+    });
 
     return provider.executeTest(async (mockServer) => {
       const client = new InventoryClient(mockServer.url);
