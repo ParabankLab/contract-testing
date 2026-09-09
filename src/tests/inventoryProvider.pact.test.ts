@@ -19,7 +19,7 @@ describe('InventoryService Pact Provider Verification', () => {
   it('validates expectations defined by OrderService contract', async () => {
     const verifier = new Verifier({
       provider: 'InventoryService',
-      providerBaseUrl: `http://localhost:${PORT}`,
+      providerBaseUrl: `http://127.0.0.1:8080`,
       pactUrls: [
         path.resolve(process.cwd(), 'pacts/OrderService-InventoryService.json'),
       ],
