@@ -12,13 +12,6 @@ const provider = new PactV3({
   dir: path.resolve(process.cwd(), 'pacts'),
 });
 
-afterAll(() => {
-  const pactFilePath = path.resolve(process.cwd(), 'pacts', 'OrderService-InventoryService.json');
-  if (fs.existsSync(pactFilePath)) {
-    const pactContent = fs.readFileSync(pactFilePath, 'utf-8');
-    allure.attachment('Generated Pact Contract', pactContent, 'application/json');
-  }
-});
 
 describe('InventoryClient Pact Test', () => {
 
@@ -37,6 +30,12 @@ describe('InventoryClient Pact Test', () => {
         body: InventoryMockFixtures.getItemResponseBody(),
       });
 
+    // 2. Attach generated Pact JSON file while the test context is active
+    const pactFilePath = path.resolve(process.cwd(), 'pacts', 'OrderService-InventoryService.json');
+    if (fs.existsSync(pactFilePath)) {
+      const pactContent = fs.readFileSync(pactFilePath, 'utf-8');
+      allure.attachment('Generated Pact Contract', pactContent, 'application/json');
+    }
 
 
     return provider.executeTest(async (mockServer) => {
@@ -48,4 +47,6 @@ describe('InventoryClient Pact Test', () => {
       expect(data.status).toBe('IN_STOCK');
     });
   });
+
+ 
 });
