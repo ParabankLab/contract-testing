@@ -59,16 +59,19 @@ pipeline {
     }
 
     post {
-        always {
-            echo 'Cleaning up Docker resources...'
-            // bat 'docker-compose down'
-
-            echo 'Generating Allure Report...'
-            // Generates and attaches the interactive Allure Dashboard to the Jenkins job page
-            allure includeProperties: false, 
-                   jdk: '', 
-                   results: [[path: 'allure-results']]
-        }
+       always {
+        echo 'Writing Allure Environment Metadata...'
+        bat '''
+        echo Operating.System=%OS% > allure-results\\environment.properties
+        echo Jenkins.Build.Number=%BUILD_NUMBER% >> allure-results\\environment.properties
+        echo Node.Version=v20.x >> allure-results\\environment.properties
+        echo Test.Framework=Jest v29 >> allure-results\\environment.properties
+        echo Contract.Testing=@pact-foundation/pact v17 >> allure-results\\environment.properties
+        '''
+        
+        echo 'Generating Allure Report...'
+        allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+    }
         success {
             echo 'Pipeline executed successfully! All contract tests passed.'
         }
