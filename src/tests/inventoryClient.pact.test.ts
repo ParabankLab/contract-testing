@@ -13,6 +13,13 @@ const provider = new PactV3({
 });
 
 describe('InventoryClient Pact Test', () => {
+  afterAll(() => {
+    const pactFilePath = path.resolve(process.cwd(), 'pacts', 'OrderService-InventoryService.json');
+    if (fs.existsSync(pactFilePath)) {
+      const pactContent = fs.readFileSync(pactFilePath, 'utf-8');
+      allure.attachment('Generated Pact Contract', pactContent, 'application/json');
+    }
+  });
   it('fetches inventory item details by SKU', () => {
     provider
       .given('item execution exists for SKU-100')
@@ -28,13 +35,7 @@ describe('InventoryClient Pact Test', () => {
         body: InventoryMockFixtures.getItemResponseBody(),
       });
 
-    afterAll(() => {
-      const pactFilePath = path.resolve(process.cwd(), 'pacts', 'OrderService-InventoryService.json');
-      if (fs.existsSync(pactFilePath)) {
-        const pactContent = fs.readFileSync(pactFilePath, 'utf-8');
-       allure.attachment('Generated Pact Contract', pactContent, 'application/json');
-      }
-    });
+
 
     return provider.executeTest(async (mockServer) => {
       const client = new InventoryClient(mockServer.url);
