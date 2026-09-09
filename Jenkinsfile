@@ -8,7 +8,7 @@ pipeline {
     environment {
         CI = 'true'
         ALLURE_RESULTS_DIR = 'allure-results'
-        PACT_BROKER_BASE_URL = 'http://localhost:9292'
+        //PACT_BROKER_BASE_URL = 'http://localhost:9292'
     }
 
     stages {
