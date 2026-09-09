@@ -19,15 +19,11 @@ pipeline {
         }
 
        stage('Environment Setup') {
-    steps {
-        echo 'Cleaning workspace and reinstalling dependencies...'
-        // Remove stale node_modules and package-lock in Jenkins workspace
-        bat 'if exist node_modules rmdir /s /q node_modules'
-        bat 'if exist package-lock.json del /f /q package-lock.json'
-        
-        // Fresh install
-        bat 'npm install'
-        bat 'if not exist allure-results mkdir allure-results'
+        steps {
+        echo 'Cleaning old reports...'
+        bat 'if exist allure-results rmdir /s /q allure-results'
+        bat 'mkdir allure-results'
+        bat 'npm ci'
     }
 }
 
@@ -45,12 +41,12 @@ pipeline {
                 // Executes consumer tests, outputting Pact files to ./pacts and Allure data to ./allure-results
                 bat 'npm run test:consumer'
             }
-            post {
+           /* post {
                 always {
                     // Preserve generated contract artifacts
                     archiveArtifacts artifacts: 'pacts/*.json', allowEmptyArchive: true
                 }
-            }
+            }*/
         }
 
         stage('Provider Contract Verification') {
