@@ -12,14 +12,16 @@ const provider = new PactV3({
   dir: path.resolve(process.cwd(), 'pacts'),
 });
 
+afterAll(() => {
+  const pactFilePath = path.resolve(process.cwd(), 'pacts', 'OrderService-InventoryService.json');
+  if (fs.existsSync(pactFilePath)) {
+    const pactContent = fs.readFileSync(pactFilePath, 'utf-8');
+    allure.attachment('Generated Pact Contract', pactContent, 'application/json');
+  }
+});
+
 describe('InventoryClient Pact Test', () => {
-  afterAll(() => {
-    const pactFilePath = path.resolve(process.cwd(), 'pacts', 'OrderService-InventoryService.json');
-    if (fs.existsSync(pactFilePath)) {
-      const pactContent = fs.readFileSync(pactFilePath, 'utf-8');
-      allure.attachment('Generated Pact Contract', pactContent, 'application/json');
-    }
-  });
+
   it('fetches inventory item details by SKU', () => {
     provider
       .given('item execution exists for SKU-100')
