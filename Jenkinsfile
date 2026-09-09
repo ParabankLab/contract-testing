@@ -18,16 +18,18 @@ pipeline {
             }
         }
 
-        stage('Environment Setup') {
-            steps {
-                echo 'Installing dependencies and bringing up local services...'
-                bat 'npm ci'
-                // Ensure Allure CLI directory exists (Windows CMD syntax)
-                bat 'if not exist allure-results mkdir allure-results'
-                // Optional: Spin up background containers if using local Pact Broker / Provider
-                // bat 'docker-compose up -d'
-            }
-        }
+       stage('Environment Setup') {
+    steps {
+        echo 'Cleaning workspace and reinstalling dependencies...'
+        // Remove stale node_modules and package-lock in Jenkins workspace
+        bat 'if exist node_modules rmdir /s /q node_modules'
+        bat 'if exist package-lock.json del /f /q package-lock.json'
+        
+        // Fresh install
+        bat 'npm install'
+        bat 'if not exist allure-results mkdir allure-results'
+    }
+}
 
         stage('Code Quality & Lint') {
             steps {
