@@ -8,6 +8,11 @@ module.exports = {
 
   reporters: [
     'default',
-    'jest-allure-reporter'
+    [
+      'jest-allure2-reporter',
+      {
+        resultsDir: 'allure-results'
+      }
+    ]
   ]
 };
