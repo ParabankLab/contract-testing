@@ -11,7 +11,7 @@ module.exports = {
     [
       'jest-allure2-reporter',
       {
-        resultsDir: './allure-results',
+        resultsDir: 'allure-results',
       },
     ],
   ],
