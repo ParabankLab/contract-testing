@@ -38,13 +38,14 @@ describe('InventoryClient Pact Test', () => {
       expect(data.status).toBe('IN_STOCK');
     });
 
-    // 2. Log step string and attach contract
+    // 2. Attach contract artifact using type assertion on allure
     const pactFilePath = path.resolve(process.cwd(), 'pacts', 'OrderService-InventoryService.json');
     if (fs.existsSync(pactFilePath)) {
       const pactContent = fs.readFileSync(pactFilePath, 'utf-8');
       
-      allure.step('Attach Pact Contract');
-      allure.attachment('OrderService-InventoryService.json', pactContent, 'application/json');
+      (allure as any).step('Attach Pact Contract', () => {
+        allure.attachment('OrderService-InventoryService.json', pactContent, 'application/json');
+      });
     }
   });
 });
