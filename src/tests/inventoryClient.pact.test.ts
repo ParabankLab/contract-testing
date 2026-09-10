@@ -28,7 +28,7 @@ describe('InventoryClient Pact Test', () => {
         body: InventoryMockFixtures.getItemResponseBody(),
       });
 
-    // 1. Run Pact test
+    // 1. Run Pact test execution
     await provider.executeTest(async (mockServer) => {
       const client = new InventoryClient(mockServer.url);
       const data = await client.getStock('SKU-100');
@@ -38,14 +38,11 @@ describe('InventoryClient Pact Test', () => {
       expect(data.status).toBe('IN_STOCK');
     });
 
-    // 2. Attach contract artifact using type assertion on allure
+    // 2. Attach using Buffer to guarantee byte-stream writing to allure-results
     const pactFilePath = path.resolve(process.cwd(), 'pacts', 'OrderService-InventoryService.json');
     if (fs.existsSync(pactFilePath)) {
-      const pactContent = fs.readFileSync(pactFilePath, 'utf-8');
-      
-      (allure as any).step('Attach Pact Contract', () => {
-        allure.attachment('OrderService-InventoryService.json', pactContent, 'application/json');
-      });
+      const pactBuffer = fs.readFileSync(pactFilePath);
+      allure.attachment('OrderService-InventoryService.json', pactBuffer, 'application/json');
     }
   });
 });

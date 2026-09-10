@@ -11,9 +11,8 @@ module.exports = {
     [
       'jest-allure2-reporter',
       {
-        resultsDir: 'allure-results',
-        overwrite: false
-      }
-    ]
-  ]
+        resultsDir: './allure-results',
+      },
+    ],
+  ],
 };
