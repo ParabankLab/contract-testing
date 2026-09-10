@@ -1,8 +1,12 @@
 import { describe, it, expect } from '@jest/globals';
 import { PactV3 } from '@pact-foundation/pact';
+import fs from 'fs';
 import path from 'path';
 import { InventoryClient } from '../clients/inventoryClient';
 import { InventoryMockFixtures } from '../models/pactExpectations';
+
+// Import allure object directly from jest-allure2-reporter
+const { allure } = require('jest-allure2-reporter/api');
 
 const provider = new PactV3({
   consumer: 'OrderService',
@@ -34,5 +38,12 @@ describe('InventoryClient Pact Test', () => {
       expect(data.quantity).toBe(150);
       expect(data.status).toBe('IN_STOCK');
     });
+
+    // Attach contract payload directly to the test step
+    const pactFilePath = path.resolve(process.cwd(), 'pacts', 'OrderService-InventoryService.json');
+    if (fs.existsSync(pactFilePath)) {
+      const pactContent = fs.readFileSync(pactFilePath, 'utf-8');
+      allure.attachment('OrderService-InventoryService.json', pactContent, 'application/json');
+    }
   });
 });
