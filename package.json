@@ -6,7 +6,8 @@
   "scripts": {
     "test:consumer": "jest src/tests/inventoryClient.pact.test.ts",
     "test:provider": "jest src/tests/inventoryProvider.pact.test.ts",
-    "test:pact": "npm run test:consumer && npm run test:provider"
+    "test:pact": "npm run test:consumer && npm run test:provider",
+    "test:all": "jest --runInBand"
   },
   "repository": {
     "type": "git",
