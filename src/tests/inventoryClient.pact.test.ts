@@ -4,7 +4,6 @@ import fs from 'fs';
 import path from 'path';
 import { InventoryClient } from '../clients/inventoryClient';
 import { InventoryMockFixtures } from '../models/pactExpectations';
-import { allure } from 'jest-allure2-reporter/api';
 
 const provider = new PactV3({
   consumer: 'OrderService',
@@ -28,7 +27,7 @@ describe('InventoryClient Pact Test', () => {
         body: InventoryMockFixtures.getItemResponseBody(),
       });
 
-    // 1. Execute Pact test interaction
+    // 1. Run Pact test interaction
     await provider.executeTest(async (mockServer) => {
       const client = new InventoryClient(mockServer.url);
       const data = await client.getStock('SKU-100');
@@ -38,11 +37,14 @@ describe('InventoryClient Pact Test', () => {
       expect(data.status).toBe('IN_STOCK');
     });
 
-    // 2. Attach JSON contract directly to the test case
+    // 2. Attach using global allure instance safely
     const pactFilePath = path.resolve(process.cwd(), 'pacts', 'OrderService-InventoryService.json');
     if (fs.existsSync(pactFilePath)) {
       const pactContent = fs.readFileSync(pactFilePath, 'utf-8');
-      allure.attachment('OrderService-InventoryService.json', pactContent, 'application/json');
+      const allureInstance = (global as any).allure;
+      if (allureInstance && typeof allureInstance.attachment === 'function') {
+        allureInstance.attachment('OrderService-InventoryService.json', pactContent, 'application/json');
+      }
     }
   });
 });
