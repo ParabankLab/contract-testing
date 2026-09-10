@@ -28,7 +28,7 @@ describe('InventoryClient Pact Test', () => {
         body: InventoryMockFixtures.getItemResponseBody(),
       });
 
-    // 1. Wait for executeTest to complete so Pact flushes the file to disk
+    // 1. Run Pact test
     await provider.executeTest(async (mockServer) => {
       const client = new InventoryClient(mockServer.url);
       const data = await client.getStock('SKU-100');
@@ -38,11 +38,13 @@ describe('InventoryClient Pact Test', () => {
       expect(data.status).toBe('IN_STOCK');
     });
 
-    // 2. Attach the contract file now that executeTest has written it to disk
+    // 2. Log step string and attach contract
     const pactFilePath = path.resolve(process.cwd(), 'pacts', 'OrderService-InventoryService.json');
     if (fs.existsSync(pactFilePath)) {
       const pactContent = fs.readFileSync(pactFilePath, 'utf-8');
-      allure.attachment('Generated Pact Contract', pactContent, 'application/json');
+      
+      allure.step('Attach Pact Contract');
+      allure.attachment('OrderService-InventoryService.json', pactContent, 'application/json');
     }
   });
 });
