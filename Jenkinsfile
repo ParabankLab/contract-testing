@@ -1,11 +1,18 @@
-stage('Execute Tests') {
-    steps {
-        // Clean old results directory before execution
-        bat 'if exist allure-results rmdir /s /q allure-results'
-        
-        // Run all contract tests in a single command
-        bat 'npm run test:all'
+pipeline {
+    agent any
+
+    stages {
+        stage('Execute Tests') {
+            steps {
+                // Clean old results directory before execution
+                bat 'if exist allure-results rmdir /s /q allure-results'
+                
+                // Run all contract tests in a single command
+                bat 'npm run test:all'
+            }
+        }
     }
+    
     post {
         always {
             // Inject generated contract artifact into Allure results
